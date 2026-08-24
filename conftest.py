@@ -1,5 +1,8 @@
 """Общие фикстуры: их видит любой тест этого репозитория."""
 
+import re
+from pathlib import Path
+
 import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -33,6 +36,13 @@ def driver(request):
 
     yield driver
 
+    if _failed(request.node):
+        SCREENSHOTS.mkdir(exist_ok=True)
+        name = re.sub(r"[^\w.-]+", "_", request.node.name)
+        path = SCREENSHOTS / f"{name}.png"
+        driver.save_screenshot(str(path))
+        print(f"\nСкриншот падения: {path}")
+
     driver.quit()
 
 
@@ -62,3 +72,29 @@ def login(driver, base_url):
         WebDriverWait(driver, 10).until(EC.url_contains("/courses/"))
 
     return _login
+
+
+# ---------- скриншот при падении ----------
+
+SCREENSHOTS = Path(__file__).parent / "screenshots"
+
+
+@pytest.hookimpl(wrapper=True)
+def pytest_runtest_makereport(item, call):
+    """Прикрепляет отчёт о каждой фазе теста к самому тесту.
+
+    Фикстуре при уборке нужно знать, упал тест или прошёл, а сама она этого
+    не видит. Хук складывает отчёт на объект теста, откуда фикстура его читает.
+    """
+    report = yield
+    setattr(item, f"report_{report.when}", report)
+    return report
+
+
+def _failed(node) -> bool:
+    """Упал ли тест на подготовке или на самом прогоне."""
+    for phase in ("setup", "call"):
+        report = getattr(node, f"report_{phase}", None)
+        if report is not None and report.failed:
+            return True
+    return False
