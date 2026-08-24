@@ -25,6 +25,7 @@ pytest -m paywall           # только доступ к платному
 pytest --headless           # без окна браузера
 pytest --base-url http://127.0.0.1:8000   # другой адрес стенда
 pytest --collect-only -q    # что вообще собирается, ничего не запуская
+ruff check .    # проверка оформления и импортов
 ```
 
 ## Когда тест падает
@@ -35,13 +36,14 @@ pytest --collect-only -q    # что вообще собирается, ниче
 
 ## Из чего состоит
 
-| Файл | Что внутри |
-|---|---|
-| `conftest.py` | фикстуры `driver`, `base_url`, `login`; параметры `--base-url` и `--headless` |
-| `pytest.ini` | маркеры `smoke` и `paywall`, `--strict-markers` |
-| `tests/test_catalog.py` | каталог курсов |
-| `tests/test_auth.py` | вход и перенаправления неавторизованных |
-| `tests/test_paywall.py` | доступ к платному уроку по ролям |
+| Файл                    | Что внутри                                                                    |
+|-------------------------|-------------------------------------------------------------------------------|
+| `conftest.py`           | фикстуры `driver`, `base_url`, `login`; параметры `--base-url` и `--headless` |
+| `pytest.ini`            | маркеры `smoke`, `paywall`, 'signup', `--strict-markers`                      |
+| `tests/test_catalog.py` | каталог курсов                                                                |
+| `tests/test_auth.py`    | вход и перенаправления неавторизованных                                       |
+| `tests/test_paywall.py` | доступ к платному уроку по ролям                                              |
+| `tests/test_signup.py`  | регистрация нового пользователя                                               |
 
 Фикстура `login` возвращает функцию: `login("student")` — и браузер оказывается на сайте под этой ролью.
 
