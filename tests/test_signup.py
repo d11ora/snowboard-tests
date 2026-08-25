@@ -48,3 +48,23 @@ def test_weak_password_is_rejected(driver, base_url, password, error):
         e.text for e in driver.find_elements(By.CSS_SELECTOR, "[role=alert]")
     )
     assert error in errors, f"ожидали «{error}», форма ответила: {errors}"
+
+@pytest.mark.signup
+@pytest.mark.parametrize(
+    "email",
+    ["ridermail.kz", "rider@", "@mail.kz", "rider@mail"],
+    ids=["нет собаки", "нет домена", "нет имени", "домен без зоны"],
+)
+def test_weak_email_is_rejected(driver, base_url, email ):
+
+    signup(driver, base_url, email=email, password="оченьдлинныйпароль7")
+
+    WebDriverWait(driver, 10).until(
+     EC.presence_of_element_located((By.CSS_SELECTOR, "[role=alert]")),
+     "форма приняла некорректный адрес почты"
+    )
+    errors = " ".join(
+        e.text for e in driver.find_elements(By.CSS_SELECTOR, "[role=alert]")
+    )
+    assert "правильный адрес электронной почты" in errors, f"форма ответила: {errors}"
+    assert "/accounts/signup/" in driver.current_url
