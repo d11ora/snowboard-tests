@@ -84,3 +84,20 @@ def test_signup_without_country_is_rejected(driver, base_url):
     )
     assert "Обязательное поле" in errors, f"форма ответила: {errors}"
     assert "/accounts/signup/" in driver.current_url
+
+@pytest.mark.signup
+def test_password_similar_to_email_is_rejected(driver, base_url):
+    email = f"autotest-{uuid4().hex[:8]}@mail.kz"
+
+    signup(driver, base_url, email=email, password=email)
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "[role=alert]")),
+        "форма приняла пароль похожий на почту"
+    )
+    errors = " ".join(
+        e.text for e in driver.find_elements(By.CSS_SELECTOR, "[role=alert]")
+    )
+    assert "слишком похож" in errors, f"форма ответила: {errors}"
+    assert "/accounts/signup/" in driver.current_url
+
