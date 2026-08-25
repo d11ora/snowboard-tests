@@ -26,6 +26,18 @@ def test_signup_leads_to_confirm_email(driver, base_url):
      "после регистрации не увели на подтверждение почты")
     assert "Подтвердите почту" in driver.find_element(By.TAG_NAME, "h1").text
 
+@pytest.mark.signup
+def test_empty_form_is_rejected(driver, base_url):
+    driver.get(f"{base_url}/accounts/signup/")
+    driver.find_element(By.CSS_SELECTOR, "button[type=submit]").click()
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "[role=alert]")),
+        "форма приняла пустую отправку",
+    )
+    alerts = driver.find_elements(By.CSS_SELECTOR, "[role=alert]")
+    assert len(alerts) >= 4, f"ошибок должно быть четыре, показано {len(alerts)}: Обязательное поле"
+    assert "/accounts/signup/" in driver.current_url
 
 @pytest.mark.signup
 @pytest.mark.parametrize("password, error",
