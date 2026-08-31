@@ -1,10 +1,8 @@
 from uuid import uuid4
 
 import pytest
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 
+from pages.confirm_email_page import ConfirmEmailPage
 from pages.signup_page import SignupPage
 
 
@@ -14,10 +12,9 @@ def test_signup_leads_to_confirm_email(driver, base_url):
 
     SignupPage(driver, base_url).open().fill(email, "оченьдлинныйпароль7").submit()
 
-    WebDriverWait(driver, 10).until(
-      EC.url_contains("/accounts/confirm-email/"),
-      "после регистрации не увели на подтверждение почты")
-    assert "Подтвердите почту" in driver.find_element(By.TAG_NAME, "h1").text
+    confirm = ConfirmEmailPage(driver, base_url).wait_until_open()
+
+    assert "Подтвердите почту" in confirm.heading()
 
 
 @pytest.mark.signup

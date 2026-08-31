@@ -5,9 +5,10 @@ from pathlib import Path
 
 import pytest
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+
+from pages.login_page import LoginPage
 
 
 def pytest_addoption(parser):
@@ -63,10 +64,7 @@ def login(driver, base_url):
 
     def _login(role):
         email, password = ACCOUNTS[role]
-        driver.get(f"{base_url}/accounts/login/")
-        driver.find_element(By.ID, "id_login").send_keys(email)
-        driver.find_element(By.ID, "id_password").send_keys(password)
-        driver.find_element(By.CSS_SELECTOR, "button[type=submit]").click()
+        LoginPage(driver, base_url).open().fill(email, password).submit()
         # Успешный вход перебрасывает в каталог. Ждём именно этого,
         # иначе тест поедет дальше на ещё не сменившейся странице.
         WebDriverWait(driver, 10).until(EC.url_contains("/courses/"))

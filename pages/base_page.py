@@ -25,3 +25,11 @@ class BasePage:
             "форма не показала ни одной ошибки",
         )
         return [e.text for e in self.driver.find_elements(*self.ALERT)]
+
+    def wait_until_open(self):
+        """Ждёт, пока браузер окажется на этой странице."""
+        WebDriverWait(self.driver, 10).until(
+            EC.url_contains(self.URL),
+            f"браузер не оказался на {self.URL}",
+        )
+        return self
