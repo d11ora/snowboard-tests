@@ -57,5 +57,5 @@ def test_too_many_signups_are_throttled(session, base_url):
         codes.append(response.status_code)
         if response.status_code == 429:
             break
-
-    assert 429 in codes, f"лимит не сработал, коды ответов: {codes}"
+    assert codes[0] != 429, "лимит был исчерпан до начала теста, проверка не показательна"
+    assert 429 in codes, f"лимит не сработал за {len(codes)} попыток: {codes}"
