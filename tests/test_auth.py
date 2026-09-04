@@ -33,3 +33,20 @@ def test_valid_credentials_open_catalog(driver, base_url):
     catalog = CatalogPage(driver, base_url).wait_until_open()
 
     assert "Войти" not in catalog.header_text(), "в шапке осталась кнопка входа"
+
+@pytest.mark.parametrize(
+    "email, password",
+    [
+        ("student@demo.kz", "неверный-пароль"),
+        ("nobody@mail.kz", "любой-пароль"),
+    ],
+    ids=["неверный пароль", "несуществующий адрес"],
+)
+def test_login_with_bad_credentials_is_rejected(driver, base_url, email, password):
+    page = LoginPage(driver, base_url).open().fill(email, password).submit()
+
+    shown = " ".join(page.errors())
+
+    assert "Слишком много" not in shown, "лимит неудачных входов исчерпан, проверка не показательна"
+    assert "неверны" in shown, f"форма ответила: {shown}"
+    assert "/accounts/login/" in driver.current_url

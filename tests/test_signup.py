@@ -48,8 +48,8 @@ def test_weak_password_is_rejected(driver, base_url, password, expected):
 @pytest.mark.signup
 @pytest.mark.parametrize(
     "email",
-    ["ridermail.kz", "rider@", "@mail.kz", "rider@mail"],
-    ids=["нет собаки", "нет домена", "нет имени", "домен без зоны"],
+    ["ridermail.kz", "rider@", "@mail.kz", "rider@mail", "райдер@mail.kz"],
+    ids=["нет собаки", "нет домена", "нет имени", "домен без зоны", "кириллица в имени"],
 )
 def test_weak_email_is_rejected(driver, base_url, email):
     page = SignupPage(driver, base_url).open().fill(email, "оченьдлинныйпароль7").submit()
