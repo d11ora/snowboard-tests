@@ -68,7 +68,7 @@ assert "Слишком много" not in shown, "лимит неудачных 
 | `conftest.py`           | фикстуры `driver`, `base_url`, `login`; параметры `--base-url` и `--headless` |
 | `pytest.ini`            | маркеры `smoke`, `paywall`, `signup`, `api`, `ratelimit`; `--strict-markers`  |
 | `tests/test_catalog.py` | каталог курсов                                                                |
-| `tests/test_auth.py`    | вход и перенаправления неавторизованных                                       |
+| `tests/test_auth.py`    | вход: успешный, неверные данные, редирект неавторизованного                   |
 | `tests/test_paywall.py` | доступ к платному уроку по ролям                                              |
 | `tests/test_signup.py`  | регистрация в браузере: форма, валидация полей                                |
 | `tests/test_signup_http.py` | регистрация на уровне HTTP: csrf, коды ответов, лимит                     |
