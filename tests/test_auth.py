@@ -97,3 +97,18 @@ def test_logout_button_ends_session(driver, base_url):
     catalog=CatalogPage(driver, base_url).open().log_out().wait_for_guest()
 
     assert "Войти" in catalog.header_text()
+
+
+def test_login_returns_to_requested_page(driver, base_url):
+    driver.get(f"{base_url}/reviews/")
+
+    assert "next=/reviews/" in driver.current_url,\
+        f"аноним не отправлен на вход: {driver.current_url}"
+
+    LoginPage(driver, base_url).fill(*ACCOUNTS["student"]).submit()
+
+    WebDriverWait(driver, 10).until(
+        EC.url_to_be(f"{base_url}/reviews/"),
+        "после входа не вернуло на запрошенную страницу",
+    )
+    assert "Разборы" in driver.find_element(By.TAG_NAME, "h1").text
