@@ -8,7 +8,13 @@ class CatalogPage(BasePage):
 
     URL = "/courses/"
 
-    HEADER = (By.TAG_NAME, "header")
+    HEADER = (By.CSS_SELECTOR, "header")
+    LOGOUT = (By.CSS_SELECTOR, "header button[type=submit]")
 
     def header_text(self):
         return self.driver.find_element(*self.HEADER).text
+
+
+    def log_out(self):
+        self.driver.find_element(*self.LOGOUT).click()
+        return self
