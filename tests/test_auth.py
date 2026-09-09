@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -5,7 +7,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from conftest import ACCOUNTS
 from pages.catalog_page import CatalogPage
+from pages.confirm_email_page import ConfirmEmailPage
 from pages.login_page import LoginPage
+from pages.signup_page import SignupPage
 
 SEND_RIDING = (By.LINK_TEXT, "Отправить катание")
 LOGIN_FIELD = (By.ID, "id_login")
@@ -62,3 +66,15 @@ def test_login_with_bad_credentials_is_rejected(driver, base_url, email, passwor
     assert "Слишком много" not in shown, "лимит неудачных входов исчерпан, проверка не показательна"
     assert "неверны" in shown, f"форма ответила: {shown}"
     assert "/accounts/login/" in driver.current_url
+
+def test_unconfirmed_email_cannot_log_in(driver, base_url):
+    email = f"autotest-{uuid4().hex[:8]}@mail.kz"
+    password = "оченьдлинныйпароль7"
+    SignupPage(driver, base_url).open().fill(email, password).submit()
+    ConfirmEmailPage(driver, base_url).wait_until_open()
+
+    LoginPage(driver, base_url).open().fill(email, password).submit()
+    ConfirmEmailPage(driver, base_url).wait_until_open()
+
+    catalog = CatalogPage(driver, base_url).open()
+    assert "Войти" in catalog.header_text()
