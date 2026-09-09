@@ -80,13 +80,20 @@ def test_unconfirmed_email_cannot_log_in(driver, base_url):
     assert "Войти" in catalog.header_text()
 
 def test_logout_by_link_does_not_log_out(driver, base_url):
-
     LoginPage(driver, base_url).open().fill(*ACCOUNTS["student"]).submit()
     CatalogPage(driver, base_url).wait_until_open()
 
     driver.get(f"{base_url}/accounts/logout/")
 
     catalog = CatalogPage(driver, base_url).open()
+
     assert "Выход" in catalog.header_text()
 
 
+def test_logout_button_ends_session(driver, base_url):
+    LoginPage(driver, base_url).open().fill(*ACCOUNTS["student"]).submit()
+    CatalogPage(driver, base_url).wait_until_open()
+
+    catalog=CatalogPage(driver, base_url).open().log_out().wait_for_guest()
+
+    assert "Войти" in catalog.header_text()

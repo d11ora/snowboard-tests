@@ -1,4 +1,6 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from pages.base_page import BasePage
 
@@ -10,6 +12,7 @@ class CatalogPage(BasePage):
 
     HEADER = (By.CSS_SELECTOR, "header")
     LOGOUT = (By.CSS_SELECTOR, "header button[type=submit]")
+    LOGIN_LINK = (By.LINK_TEXT, "Войти")
 
     def header_text(self):
         return self.driver.find_element(*self.HEADER).text
@@ -17,4 +20,12 @@ class CatalogPage(BasePage):
 
     def log_out(self):
         self.driver.find_element(*self.LOGOUT).click()
+        return self
+
+    def wait_for_guest(self):
+        """Ждёт, пока шапка станет гостевой — со ссылкой «Войти»."""
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(self.LOGIN_LINK),
+            "после выхода в шапке не появилась ссылка «Войти»",
+        )
         return self
