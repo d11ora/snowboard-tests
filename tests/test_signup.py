@@ -18,7 +18,7 @@ def test_signup_leads_to_confirm_email(driver, base_url):
 
 
 @pytest.mark.signup
-def test_empty_form_is_rejected(driver, base_url):
+def test_empty_signup_form_is_rejected(driver, base_url):
     page = SignupPage(driver, base_url).open().submit()
 
     alerts = page.errors()

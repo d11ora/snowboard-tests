@@ -24,6 +24,7 @@ def test_anonymous_sending_riding_is_asked_to_log_in(driver, base_url):
     # Адреса мало: он может смениться, а форма не отрисоваться.
     assert driver.find_element(*LOGIN_FIELD).is_displayed()
 
+
 @pytest.mark.smoke
 def test_valid_credentials_open_catalog(driver, base_url):
     email, password = ACCOUNTS["student"]
@@ -33,6 +34,17 @@ def test_valid_credentials_open_catalog(driver, base_url):
     catalog = CatalogPage(driver, base_url).wait_until_open()
 
     assert "Войти" not in catalog.header_text(), "в шапке осталась кнопка входа"
+    assert "Выход" in catalog.header_text(), "в шапке нет кнопки выхода — вход не состоялся"
+
+
+def test_empty_login_form_is_rejected(driver, base_url):
+    page = LoginPage(driver, base_url).open().submit()
+
+    alerts = page.errors()
+
+    assert len(alerts) >= 2, f"ошибок должно быть не меньше двух, показано {len(alerts)}: {alerts}"
+    assert "/accounts/login/" in driver.current_url
+
 
 @pytest.mark.parametrize(
     "email, password",
