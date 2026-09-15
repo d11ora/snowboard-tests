@@ -1,34 +1,4 @@
 import pytest
-import requests
-
-from conftest import ACCOUNTS
-
-
-@pytest.fixture
-def api(base_url):
-    """Возвращает функцию: api("student") — сессия, вошедшая под этой ролью.
-    Без аргумента — сессия анонима."""
-
-    def _api(role=None):
-        session = requests.Session()
-        if role is None:
-            return session
-
-        email, password = ACCOUNTS[role]
-        session.get(f"{base_url}/accounts/login/")          # получили csrftoken
-        response = session.post(
-            f"{base_url}/accounts/login/",
-            data={
-                "csrfmiddlewaretoken": session.cookies["csrftoken"],
-                "login": email,
-                "password": password,
-            },
-            allow_redirects=False,
-        )
-        assert response.status_code == 302, f"вход под {role} не удался: {response.status_code}"
-        return session
-
-    return _api
 
 
 @pytest.mark.api
