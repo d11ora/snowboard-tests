@@ -15,13 +15,7 @@ from pages.login_page import LoginPage
 def pytest_addoption(parser):
     # Адрес стенда — параметром, а не константой в тесте: завтра появится
     # второй стенд, и менять придётся строку запуска, а не тесты.
-    parser.addoption("--base-url", default="http://127.0.0.1:8000")
     parser.addoption("--headless", action="store_true", help="без окна браузера")
-
-
-@pytest.fixture(scope="session")
-def base_url(request):
-    return request.config.getoption("--base-url").rstrip("/")
 
 
 @pytest.fixture
