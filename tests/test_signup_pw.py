@@ -17,3 +17,25 @@ def test_signup_leads_to_confirm_email(page, base_url):
 
     expect(page).to_have_url(f"{base_url}/accounts/confirm-email/")
     expect(page.get_by_role("heading")).to_have_text("Подтвердите почту")
+
+
+@pytest.mark.signup
+@pytest.mark.parametrize(
+    "password, expected",
+    [
+        ("Abc12!", "слишком короткий"),
+        ("90218374651", "только из цифр"),
+        ("password", "слишком широко распространён"),
+    ],
+)
+def test_weak_password_is_rejected(page, base_url, password, expected):
+    email = f"autotest-{uuid4().hex[:8]}@mail.kz"
+    page.goto(f"{base_url}/accounts/signup/")
+    page.get_by_label("Адрес электронной почты").fill(email)
+    page.get_by_label("Страна").select_option("kz")
+    page.get_by_label("Пароль", exact=True).fill(password)
+    page.get_by_label("Пароль (ещё раз)").fill(password)
+    page.get_by_role("button", name="Создать аккаунт").click()
+
+    expect(page.get_by_role("alert").filter(has_text=expected)).to_be_visible()
+    expect(page).to_have_url(f"{base_url}/accounts/signup/")
