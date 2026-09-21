@@ -45,7 +45,8 @@ def test_empty_signup_form_is_rejected(page, base_url):
     page.goto(f"{base_url}/accounts/signup/")
     page.get_by_role("button", name="Создать аккаунт").click()
 
-    # Форму отбивает сервер, а не браузер: у полей нет required,
-    # поэтому пустая отправка доходит до бэкенда и возвращается с ошибками.
+    # Форму отбивает сервер, а не браузер: у полей есть required, но на самой
+    # форме стоит novalidate — браузерная проверка отключена намеренно, чтобы
+    # все ошибки приходили в одном оформлении, через [role=alert].
     expect(page.get_by_role("alert")).to_have_count(4)
     expect(page).to_have_url(f"{base_url}/accounts/signup/")
