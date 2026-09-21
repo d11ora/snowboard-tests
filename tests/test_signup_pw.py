@@ -39,3 +39,13 @@ def test_weak_password_is_rejected(page, base_url, password, expected):
 
     expect(page.get_by_role("alert").filter(has_text=expected)).to_be_visible()
     expect(page).to_have_url(f"{base_url}/accounts/signup/")
+
+@pytest.mark.signup
+def test_empty_signup_form_is_rejected(page, base_url):
+    page.goto(f"{base_url}/accounts/signup/")
+    page.get_by_role("button", name="Создать аккаунт").click()
+
+    # Форму отбивает сервер, а не браузер: у полей нет required,
+    # поэтому пустая отправка доходит до бэкенда и возвращается с ошибками.
+    expect(page.get_by_role("alert")).to_have_count(4)
+    expect(page).to_have_url(f"{base_url}/accounts/signup/")

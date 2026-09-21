@@ -23,7 +23,7 @@ def test_empty_signup_form_is_rejected(driver, base_url):
 
     alerts = page.errors()
 
-    assert len(alerts) >= 4, f"ошибок должно быть четыре, показано {len(alerts)}: {alerts}"
+    assert len(alerts) == 4, f"ошибок должно быть четыре, показано {len(alerts)}: {alerts}"
     assert "/accounts/signup/" in driver.current_url
 
 
