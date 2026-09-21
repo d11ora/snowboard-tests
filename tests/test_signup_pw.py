@@ -1,8 +1,10 @@
 from uuid import uuid4
 
+import pytest
 from playwright.sync_api import expect
 
 
+@pytest.mark.signup
 def test_signup_leads_to_confirm_email(page, base_url):
     email = f"autotest-{uuid4().hex[:8]}@mail.kz"
 
