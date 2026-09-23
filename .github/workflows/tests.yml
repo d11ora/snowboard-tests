@@ -1,0 +1,47 @@
+name: tests
+
+# Триггеры: при пуше в основные ветки, в каждом пулл-реквесте
+# и вручную кнопкой в интерфейсе GitHub.
+on:
+  push:
+    branches: [main, playwright]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Оформление и импорты
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Установить зависимости
+        run: pip install -r requirements.txt
+
+      - name: ruff
+        run: ruff check .
+
+  collect:
+    name: Тесты собираются
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Установить зависимости
+        run: pip install -r requirements.txt
+
+      # Стенд в CI пока не поднимается, поэтому сами тесты не запускаем.
+      # Но сборка проверяет реальные вещи: импорты, конфликты имён,
+      # объявленные маркеры (--strict-markers), целостность conftest.
+      - name: pytest --collect-only
+        run: pytest --collect-only -q
