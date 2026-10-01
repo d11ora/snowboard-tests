@@ -21,7 +21,7 @@ def student_state(browser, base_url, tmp_path_factory):
 
     page.goto(f"{base_url}/accounts/login/")
     page.get_by_label("Адрес электронной почты").fill("student@demo.kz")
-    page.get_by_label("Пароль").fill("demo12345")
+    page.get_by_label("Пароль", exact=True).fill("demo12345")
     page.get_by_role("button", name="Войти").click()
     # Сохранять состояние можно только после того, как сервер поставил sessionid:
     # вход перебрасывает в каталог, этого и ждём.
