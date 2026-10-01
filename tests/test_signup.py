@@ -14,7 +14,7 @@ def test_signup_leads_to_confirm_email(driver, base_url):
 
     confirm = ConfirmEmailPage(driver, base_url).wait_until_open()
 
-    assert "Подтвердите почту" in confirm.heading()
+    assert "Код из письма" in confirm.heading()
 
 
 @pytest.mark.signup
@@ -23,7 +23,7 @@ def test_empty_signup_form_is_rejected(driver, base_url):
 
     alerts = page.errors()
 
-    assert len(alerts) >= 4, f"ошибок должно быть четыре, показано {len(alerts)}: {alerts}"
+    assert len(alerts) == 5, f"ошибок должно быть пять, показано {len(alerts)}: {alerts}"
     assert "/accounts/signup/" in driver.current_url
 
 

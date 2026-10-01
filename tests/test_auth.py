@@ -1,3 +1,4 @@
+import time
 from uuid import uuid4
 
 import pytest
@@ -11,7 +12,7 @@ from pages.confirm_email_page import ConfirmEmailPage
 from pages.login_page import LoginPage
 from pages.signup_page import SignupPage
 
-SEND_RIDING = (By.LINK_TEXT, "Отправить катание")
+SEND_RIDING = (By.LINK_TEXT, "Отправить видео")
 LOGIN_FIELD = (By.ID, "id_login")
 
 
@@ -72,6 +73,11 @@ def test_unconfirmed_email_cannot_log_in(driver, base_url):
     password = "оченьдлинныйпароль7"
     SignupPage(driver, base_url).open().fill(email, password).submit()
     ConfirmEmailPage(driver, base_url).wait_until_open()
+
+    # Вход неподтверждённым заставляет сайт переслать код, а его нельзя
+    # отправлять чаще раза в 10 секунд на адрес. Без паузы форма отвечает
+    # «Слишком много неудачных попыток входа» — хотя пароль верный.
+    time.sleep(11)
 
     LoginPage(driver, base_url).open().fill(email, password).submit()
     ConfirmEmailPage(driver, base_url).wait_until_open()

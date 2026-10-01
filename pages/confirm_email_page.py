@@ -4,7 +4,7 @@ from pages.base_page import BasePage
 
 
 class ConfirmEmailPage(BasePage):
-    """Страница «Подтвердите почту» — куда уводит после регистрации."""
+    """Страница «Код из письма» — куда уводит после регистрации."""
 
     URL = "/accounts/confirm-email/"
 
