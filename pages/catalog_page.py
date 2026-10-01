@@ -12,6 +12,7 @@ class CatalogPage(BasePage):
 
     HEADER = (By.CSS_SELECTOR, "header")
     LOGOUT = (By.CSS_SELECTOR, "header button[type=submit]")
+    LOGOUT_CONFIRM = (By.XPATH, "//dialog[@id='logout-confirm']//button[normalize-space()='Выйти']")
     LOGIN_LINK = (By.LINK_TEXT, "Войти")
 
     def header_text(self):
@@ -20,6 +21,11 @@ class CatalogPage(BasePage):
 
     def log_out(self):
         self.driver.find_element(*self.LOGOUT).click()
+        WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(self.LOGOUT_CONFIRM),
+            "диалог «Точно выйти?» не открылся",
+        )
+        self.driver.find_element(*self.LOGOUT_CONFIRM).click()
         return self
 
     def wait_for_guest(self):

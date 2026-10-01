@@ -15,11 +15,13 @@ def session(base_url):
 def test_signup_without_csrf_token_is_rejected(session, base_url):
     response = session.post(
         f"{base_url}/accounts/signup/",
-        data={"email": f"autotest-{uuid4().hex[:8]}@mail.kz",
-              "country": "kz",
-              "password1": "оченьдлинныйпароль7",
-              "password2": "оченьдлинныйпароль7"
-              },
+        data={
+            "email": f"autotest-{uuid4().hex[:8]}@mail.kz",
+            "country": "kz",
+            "password1": "оченьдлинныйпароль7",
+            "consent_personal_data": "on",
+            "consent_age": "on"
+        },
     )
     assert response.status_code == 403, f"сервер ответил {response.status_code}"
 
@@ -32,9 +34,10 @@ def test_signup_with_existing_email_does_not_reveal_it(session, base_url):
             "email": "student@demo.kz",
             "country": "kz",
             "password1": "оченьдлинныйпароль7",
-            "password2": "оченьдлинныйпароль7"
+            "consent_personal_data": "on",
+            "consent_age": "on"
         },
-    allow_redirects=False,
+        allow_redirects=False,
     )
     assert response.status_code == 302, f"сервер ответил {response.status_code}"
     assert response.headers["Location"] == "/accounts/confirm-email/"
@@ -50,7 +53,8 @@ def test_too_many_signups_are_throttled(session, base_url):
                 "email": "ridermail.kz",
                 "country": "kz",
                 "password1": "оченьдлинныйпароль7",
-                "password2": "оченьдлинныйпароль7",
+                "consent_personal_data": "on",
+                "consent_age": "on"
             },
             allow_redirects=False,
         )
