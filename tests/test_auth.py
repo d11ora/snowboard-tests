@@ -39,7 +39,7 @@ def test_valid_credentials_open_catalog(driver, base_url):
     catalog = CatalogPage(driver, base_url).wait_until_open()
 
     assert "Войти" not in catalog.header_text(), "в шапке осталась кнопка входа"
-    assert "Выход" in catalog.header_text(), "в шапке нет кнопки выхода — вход не состоялся"
+    assert "Выход" in catalog.header_text(), "в шапке нет кнопки выхода - вход не состоялся"
 
 
 def test_empty_login_form_is_rejected(driver, base_url):
@@ -76,7 +76,7 @@ def test_unconfirmed_email_cannot_log_in(driver, base_url):
 
     # Вход неподтверждённым заставляет сайт переслать код, а его нельзя
     # отправлять чаще раза в 10 секунд на адрес. Без паузы форма отвечает
-    # «Слишком много неудачных попыток входа» — хотя пароль верный.
+    # «Слишком много неудачных попыток входа» - хотя пароль верный.
     time.sleep(11)
 
     LoginPage(driver, base_url).open().fill(email, password).submit()

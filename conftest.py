@@ -13,14 +13,14 @@ from pages.login_page import LoginPage
 
 
 def pytest_addoption(parser):
-    # Адрес стенда — параметром, а не константой в тесте: завтра появится
+    # Адрес стенда - параметром, а не константой в тесте: завтра появится
     # второй стенд, и менять придётся строку запуска, а не тесты.
     parser.addoption("--headless", action="store_true", help="без окна браузера")
 
 
 @pytest.fixture
 def driver(request):
-    """Свежий браузер на каждый тест — и гарантированно закрытый после."""
+    """Свежий браузер на каждый тест - и гарантированно закрытый после."""
     options = webdriver.ChromeOptions()
     if request.config.getoption("--headless"):
         options.add_argument("--headless=new")
@@ -45,7 +45,7 @@ def driver(request):
 
 # Пароль в репозитории допустим только потому, что стенд локальный,
 # а данные в нём выдуманные. Для настоящего окружения креды берут
-# из переменных окружения — привычку стоит завести сразу.
+# из переменных окружения - привычку стоит завести сразу.
 ACCOUNTS = {
     "student": ("student@demo.kz", "demo12345"),
     "coach": ("coach@demo.kz", "demo12345"),
@@ -55,8 +55,8 @@ ACCOUNTS = {
 
 @pytest.fixture
 def api(base_url):
-    """Возвращает функцию: api("student") — сессия, вошедшая под этой ролью.
-    Без аргумента — сессия анонима."""
+    """Возвращает функцию: api("student") - сессия, вошедшая под этой ролью.
+    Без аргумента - сессия анонима."""
 
     def _api(role=None):
         session = requests.Session()
@@ -82,7 +82,7 @@ def api(base_url):
 
 @pytest.fixture
 def login(driver, base_url):
-    """Возвращает функцию: login("student") — и мы на сайте под этой ролью."""
+    """Возвращает функцию: login("student") - и мы на сайте под этой ролью."""
 
     def _login(role):
         email, password = ACCOUNTS[role]
