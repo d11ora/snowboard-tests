@@ -6,7 +6,7 @@ import requests
 
 @pytest.fixture
 def session(base_url):
-    """Сессия с полученной csrf-кукой — как у браузера, открывшего форму."""
+    """Сессия с полученной csrf-кукой - как у браузера, открывшего форму."""
     session = requests.Session()
     session.get(f"{base_url}/accounts/signup/")
     return session

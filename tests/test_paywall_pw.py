@@ -1,4 +1,4 @@
-"""Пейволл на Playwright: вход выполняется один раз, дальше — готовое состояние."""
+"""Пейволл на Playwright: вход выполняется один раз, дальше - готовое состояние."""
 
 import re
 
@@ -45,6 +45,6 @@ def student_page(browser, student_state):
 def test_subscriber_gets_player(student_page, base_url):
     student_page.goto(base_url + LESSON)
 
-    # Воспроизведение не проверяем — на стенде ключи-заглушки. Проверяем, что
+    # Воспроизведение не проверяем - на стенде ключи-заглушки. Проверяем, что
     # плеер вставлен и ведёт на видеохостинг.
     expect(student_page.locator("iframe")).to_have_attribute("src", PLAYER)

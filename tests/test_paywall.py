@@ -18,7 +18,7 @@ def test_anonymous_gets_paywall(driver, base_url):
 @pytest.mark.paywall
 @pytest.mark.parametrize("role", ["guest", "coach", "admin"])
 def test_roles_without_subscription_get_paywall(driver, base_url, login, role):
-    # Роль сама по себе доступа не даёт — его даёт только подписка.
+    # Роль сама по себе доступа не даёт - его даёт только подписка.
     login(role)
     driver.get(base_url + LESSON)
     assert driver.find_element(*PAYWALL).is_displayed()

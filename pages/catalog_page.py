@@ -6,7 +6,7 @@ from pages.base_page import BasePage
 
 
 class CatalogPage(BasePage):
-    """Каталог курсов — куда попадает вошедший."""
+    """Каталог курсов - куда попадает вошедший."""
 
     URL = "/courses/"
 
@@ -29,7 +29,7 @@ class CatalogPage(BasePage):
         return self
 
     def wait_for_guest(self):
-        """Ждёт, пока шапка станет гостевой — со ссылкой «Войти»."""
+        """Ждёт, пока шапка станет гостевой - со ссылкой «Войти»."""
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(self.LOGIN_LINK),
             "после выхода в шапке не появилась ссылка «Войти»",
